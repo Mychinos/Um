@@ -56,7 +56,7 @@ export type Item = {
 }
 
 export type Collection = {
-  object: NuclinoObjectTypes.item,
+  object: NuclinoObjectTypes.collection,
   id: string,
   workspaceId: string,
   url: string,

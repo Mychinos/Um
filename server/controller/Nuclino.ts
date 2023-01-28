@@ -26,6 +26,7 @@ export class NuclinoController extends ApiController {
     })
 
     this.app.get<WorkspaceParams>('/nuclino/items/:workspaceId', async (request, reply) => {
+      console.log('Get items')
       const workspaceId = request.params.workspaceId
       let result: (Collection|Item)[] = []
       let tmpList: (Collection|Item)[] = []
@@ -37,6 +38,7 @@ export class NuclinoController extends ApiController {
         tmpList = res.data.data.results
         result = result.concat(tmpList)
         i++
+        console.log(i)
       }
       while (tmpList && tmpList.length === 100)
       console.log('Done in', i, 'Loops. Got', result.length, 'Items')

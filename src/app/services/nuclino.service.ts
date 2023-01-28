@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
-import { Workspace } from 'src/types/nuclino';
+import { Collection, Item, Workspace } from 'src/types/nuclino';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NuclinoService {
 
-  baseUrl = 'localhost:3200/nuclino'
+  baseUrl = 'http://localhost:3200/nuclino'
 
   workspaces: Workspace[] = []
   workspacesLoaded = false
@@ -31,7 +31,10 @@ export class NuclinoService {
   }
   
   async getItems(workspaceId: string) {
-    return await axios.get(`${this.baseUrl}/items?workspaceId=${workspaceId}`)
+    console.log('go')
+    const res = await axios.get<(Item | Collection)[]>(`${this.baseUrl}/items/${workspaceId}`)
+    console.log(res)
+    return res.data
   }
 
 }

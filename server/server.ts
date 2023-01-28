@@ -6,6 +6,13 @@ const PORT = 3200
 const Server = Fastify()
 const RouteController = []
 
+
+Server.addHook('preHandler', (req, reply, done) => {
+  reply.header("Access-Control-Allow-Origin", "*")
+  done()
+})
+
+
 Controller.forEach((C) => {
   const controller = new C(Server)
   controller.init()
