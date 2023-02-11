@@ -55,6 +55,7 @@ export class NuclinoController extends ApiController {
     })
 
     this.app.get<IdParams>('/nuclino/file/:id', async (request, reply) => {
+      // TODO: Build Image Cache in Server
       const fileId = request.params.id
       const res = await axios.get(`${this.baseUrl}/v0/files/${fileId}`, { headers: { Authorization: this.API_KEY } })
       reply.send(res.data.data.download.url)
