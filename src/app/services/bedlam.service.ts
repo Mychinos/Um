@@ -48,8 +48,14 @@ export class BedlamService {
     const charactersCollection = content.find((c) => c.id === 'df29893b-c5d6-40ce-a096-bc1f093220fe') as Collection
     if (charactersCollection) {
       this.nsc = this.reduceEntries(charactersCollection, this.nsc)
+      await this.enrichEntries(this.nsc)
       return
     }
+  }
+
+  async fetchItemContent(item: Item) {
+    const details = await this.nuclino.getItemDetails(item.id)
+    return details
   }
 
   reduceEntries(col: Collection, target: Item[], attributes: string[] = []) {
@@ -63,6 +69,24 @@ export class BedlamService {
       }
     })
     return target
+  }
+
+  async enrichEntries(items: Item[]) {
+    let count = items.length 
+    const stackSize = 50
+    const stack: Promise<void>[] =  []
+    while(count-- ){
+      stack.push(this.fetchItemContent(items[count]).then((details) => {
+        items[count] = details
+      }))
+      if (stack.length >= stackSize || count === 0) {
+        await Promise.all(stack)
+      }
+    }  
+  }
+
+  async getImageUrl(id: string) {
+    return this.nuclino.getImgUrl(id)
   }
 
 }

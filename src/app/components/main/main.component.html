@@ -1,5 +1,13 @@
 <div class="main">
-  <div class="container">
+  <div class="container" id="three-container">
     
+  </div>
+  <div class="controls" id="menu">
+    <div class="configuration" *ngFor="let key of targetKeys" >
+      <button (click)="transform(key)">
+        {{ key }}
+      </button>
+
+    </div>
   </div>
 </div>

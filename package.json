@@ -9,7 +9,8 @@
     "test": "ng test",
     "server:watch": "tsc -w",
     "server:build": "tsc",
-    "server:start": "nodemon ./server/server.ts"
+    "server:start": "nodemon ./server/server.ts",
+    "server": "npm run server:start"
   },
   "private": true,
   "dependencies": {
@@ -25,7 +26,6 @@
     "fastify": "^4.12.0",
     "rxjs": "~7.8.0",
     "three": "^0.149.0",
-    "three-css3drenderer": "^1.0.1",
     "three-trackballcontrols": "^0.9.0",
     "three-tween": "^1.0.0",
     "ts-node": "^10.9.1",

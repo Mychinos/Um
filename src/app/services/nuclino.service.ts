@@ -31,10 +31,17 @@ export class NuclinoService {
   }
   
   async getItems(workspaceId: string) {
-    console.log('go')
     const res = await axios.get<(Item | Collection)[]>(`${this.baseUrl}/items/${workspaceId}`)
-    console.log(res)
     return res.data
   }
 
+  async getItemDetails(itemId: string) {
+    const res = await axios.get<Item>(`${this.baseUrl}/item/${itemId}`)
+    return res.data
+  }
+
+  async getImgUrl(id: string) {
+    const res = await axios.get<string>(`${this.baseUrl}/file/${id}`)
+    return res.data
+  }
 }
