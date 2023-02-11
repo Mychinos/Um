@@ -4,22 +4,27 @@ import { ApiController } from './ApiController'
 import { RequestGenericInterface } from 'fastify'
 import { Workspace, Collection, Item } from 'src/types/nuclino'
 import { API_KEY } from './API_KEY.json'
-
+import { ImageCache } from '../services/ImageCache'
+import {join} from 'path'
 interface IdParams extends RequestGenericInterface {
   Params: {
     id: string
   }
 }
 
-
-
 export class NuclinoController extends ApiController {
   name = 'Nuclino'
   baseUrl = 'https://api.nuclino.com'
   API_KEY = API_KEY
+  cache = new ImageCache({
+    API_KEY: this.API_KEY,
+    baseUrl: this.baseUrl,
+    savePath: join(__dirname, '..', 'imageCache')
+  })
 
   constructor(fastify: FastifyInstance) {
     super(fastify)
+    
   }
 
   init() {
@@ -55,10 +60,9 @@ export class NuclinoController extends ApiController {
     })
 
     this.app.get<IdParams>('/nuclino/file/:id', async (request, reply) => {
-      // TODO: Build Image Cache in Server
       const fileId = request.params.id
-      const res = await axios.get(`${this.baseUrl}/v0/files/${fileId}`, { headers: { Authorization: this.API_KEY } })
-      reply.send(res.data.data.download.url)
+      const data = this.cache.getImage(fileId)
+      reply.send(data)
     })
 
     // this.app.get<ImgProxyParams>('/nuclino/proxy/:imageId/:imageName', async (request, reply) => {

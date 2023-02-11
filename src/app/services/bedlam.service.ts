@@ -73,7 +73,7 @@ export class BedlamService {
 
   async enrichEntries(items: Item[]) {
     let count = items.length 
-    const stackSize = 50
+    const stackSize = 20
     const stack: Promise<void>[] =  []
     while(count-- ){
       stack.push(this.fetchItemContent(items[count]).then((details) => {
