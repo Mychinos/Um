@@ -48,10 +48,11 @@ export class ImageCache {
 
   async fetchImage(fileId: string) {
     const res = await axios.get(`${this.options.baseUrl}/v0/files/${fileId}`, { headers: { Authorization: this.options.API_KEY } })
-    const fileData = await axios.get(res.data.data.download.url)
+    const fileData = await axios.get(res.data.data.download.url, { responseType: 'arraybuffer' })
     const tmp = res.data.data.download.url.split('.')
-    const filePath = join(this.options.savePath, fileId + '.' + tmp[tmp.length - 1])
-    fs.writeFileSync(filePath, fileData.data)
+    const filePath = join(this.options.savePath, fileId + '.' + tmp[tmp.length - 1].replace('%22', ''))
+    const buffer = Buffer.from(fileData.data, 'binary')//.toString('base64')
+    fs.writeFileSync(filePath, buffer)
     this.cache[fileId] = filePath
     delete this.promiseCache[fileId]
     return

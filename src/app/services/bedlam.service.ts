@@ -19,6 +19,8 @@ export class BedlamService {
   items: Item[] = []
   collections: Collection[] = []
 
+  imageMap: Record<string, string[]> = {}
+
   nsc: Item[] = []
   places: Item[] = []
   artifacts: Item[] = []
@@ -72,21 +74,35 @@ export class BedlamService {
   }
 
   async enrichEntries(items: Item[]) {
-    let count = items.length 
+    let count = items.length
     const stackSize = 20
-    const stack: Promise<void>[] =  []
-    while(count-- ){
+    const stack: Promise<void>[] = []
+    while (count--) {
       stack.push(this.fetchItemContent(items[count]).then((details) => {
         items[count] = details
       }))
       if (stack.length >= stackSize || count === 0) {
         await Promise.all(stack)
       }
-    }  
+    }
   }
 
   async getImageUrl(id: string) {
     return this.nuclino.getImgUrl(id)
+  }
+
+  extractImgSources = (item: Item) => {
+    if (!item.content) {
+      return []
+    }
+    const matches = item.content.match(/(https?:\/\/.*\.(?:png|jpg))/g)
+    return matches?.map(this.getProxyUrl) ?? []
+  }
+
+  getProxyUrl = (url: string) => {
+    const parts = url.split('/')
+    return `http://localhost:3200/nuclino/file/${parts[parts.length - 2]}`
+    // return await this.getImageUrl(parts[parts.length - 2]) 
   }
 
 }

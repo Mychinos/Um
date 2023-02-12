@@ -50,7 +50,7 @@ export class MainComponent implements OnInit {
   async ngOnInit() {
     const spaces = await this.bedlam.getContent()
     this.characters = await this.bedlam.nsc
-    console.log(this.characters[12])
+    // console.log(this.characters[12])
     this.initThree()
     this.createElements()
     this.animate()
@@ -106,9 +106,12 @@ export class MainComponent implements OnInit {
       // symbol.className = 'symbol';
       // symbol.textContent = "" + i;
       const img = document.createElement('img')
-      const src = await this.extractImgSources(item)
+      const src = this.bedlam.extractImgSources(item)
       img.src = src[0] ?? this.NO_IMG
       img.classList.add('charImg')
+      if (i === 107) {
+        console.log(item.content, src)
+      }
 
       symbol.appendChild(img)
       element.appendChild(symbol);
@@ -220,19 +223,6 @@ export class MainComponent implements OnInit {
       .onUpdate(this.render)
       .start();
 
-  }
-
-extractImgSources = async (item: Item) => {
-    if (!item.content) {
-      return []
-    }
-    const matches = item.content.match(/(https?:\/\/.*\.(?:png|jpg))/g)
-    return await Promise.all(matches?.map(this.getProxyUrl) ?? [])
-  }
-
-  getProxyUrl = async (url: string) => {
-    const parts = url.split('/')
-    return await this.bedlam.getImageUrl(parts[parts.length - 2]) // `http://localhost:3200/nuclino/proxy/${parts[parts.length - 2]}/${parts[parts.length - 1]}`
   }
 
   animate = () => {

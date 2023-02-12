@@ -61,7 +61,7 @@ export class NuclinoController extends ApiController {
 
     this.app.get<IdParams>('/nuclino/file/:id', async (request, reply) => {
       const fileId = request.params.id
-      const data = this.cache.getImage(fileId)
+      const data = await this.cache.getImage(fileId)
       reply.send(data)
     })
 
